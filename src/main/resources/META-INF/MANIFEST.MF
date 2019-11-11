@@ -1,0 +1,1 @@
+Main-Class: edu.usc.irds.tensorflow.grpc.Main
