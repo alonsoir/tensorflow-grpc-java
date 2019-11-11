@@ -17,6 +17,10 @@
 
 package edu.usc.irds.tensorflow.grpc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
@@ -26,6 +30,8 @@ import java.util.Map;
  * @author Thamme Gowda
  */
 public class Main {
+
+  // static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
   public static void main(String[] args) throws Exception {
 
@@ -45,11 +51,18 @@ public class Main {
 
     System.out.println("Image = " + imagePath);
     InputStream jpegStream = new FileInputStream(imagePath);
-    List<Map.Entry<String, Double>> list = recogniser
-        .recognise(jpegStream);
-    System.out.println(list);
-    recogniser.close();
-    jpegStream.close();
+    try {
+      List<Map.Entry<String, Double>> list = recogniser.recognise(jpegStream);
+      System.out.println(list.toString());
+      recogniser.close();
+      jpegStream.close();
+      System.exit(0);
+    }catch(Exception e){
+      System.out.println("Something went WRONG! " + e.getLocalizedMessage());
+      e.printStackTrace();
+      System.exit(-1);
+    }
+
   }
 
 }

@@ -37,21 +37,24 @@ import static edu.usc.irds.tensorflow.grpc.InceptionInference.InceptionResponse;
  */
 public class TensorflowObjectRecogniser implements Closeable {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TensorflowObjectRecogniser.class);
+  //static final Logger LOG = LoggerFactory.getLogger(TensorflowObjectRecogniser.class);
 
   private ManagedChannel channel;
   private InceptionBlockingStub stub;
 
   public TensorflowObjectRecogniser(String host, int port) {
-    LOG.debug("Creating channel host:{}, port={}", host, port);
+    System.out.println("Creating channel host: "+  host + " port= "  + port);
     try {
       channel = NettyChannelBuilder
           .forAddress(host, port)
           .usePlaintext(true)
           .build();
       stub = new InceptionBlockingStub(channel);
-      //TODO: test channel here with a sample image
+      System.out.println("Channel initialized! " + channel.toString());
+      System.out.println("TODO: test channel here with a sample image");
     } catch (Exception e) {
+      //LOG.error("Upps!" + e.getMessage());
+      System.out.println(("Upps!" + e.getMessage()));
       throw new RuntimeException(e);
     }
   }
@@ -66,7 +69,7 @@ public class TensorflowObjectRecogniser implements Closeable {
     long st = System.currentTimeMillis();
     InceptionResponse response = stub.classify(request);
     long timeTaken = System.currentTimeMillis() - st;
-    LOG.debug("Time taken : {}ms", timeTaken);
+    System.out.println("Time taken : " + timeTaken + " ms" );
     Iterator<String> classes = response.getClassesList().iterator();
     Iterator<Float> scores = response.getScoresList().iterator();
     while (classes.hasNext() && scores.hasNext()){
@@ -81,7 +84,7 @@ public class TensorflowObjectRecogniser implements Closeable {
   @Override
   public void close() throws IOException {
     if (channel != null){
-      LOG.debug("Closing the channel ");
+      System.out.println("Closing the channel ");
       channel.shutdownNow();
     }
   }
