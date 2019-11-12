@@ -4,33 +4,49 @@ This project includes java code example for making use of tensorflow
 image recognition over GRPC.
 
 
+It creates a client that tries to connect to an existing gRPC server running on some ip and port. Server code is not provided.
+## Build and run this client grpc project
 
-## Build and run this project
+	To build this jar as an addon to tika, run
 
-```
-mvn clean compile exec:java -Dexec.args="localhost:9000 example.jpg"
-```
+	```mvn clean compile assembly:single```
+
+	Last login: Tue Nov 12 13:00:48 on ttys005
+	~/g/tensorflow-grpc-java> java -jar target/tensorflow-java-1.0-jar-with-dependencies.jar localhost:9000 /Users/aironman/Pictures/example.jpg
+	Creating channel host: localhost port= 9000
+	WARNING: An illegal reflective access operation has occurred
+	WARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (file:/Users/aironman/gitProjects/tensorflow-grpc-java/target/tensorflow-java-1.0-jar-with-dependencies.jar) to constructor java.nio.DirectByteBuffer(long,int)
+	WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil
+	WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+	WARNING: All illegal access operations will be denied in a future release
+	Channel initialized! io.grpc.internal.ManagedChannelImpl@2353b3e6
+	TODO: test channel here with a sample image
+	Image = /Users/aironman/Pictures/example.jpg
+	Time taken : 323 ms
+	[sweatshirt=10.206170082092285, cloak=6.861289024353027, sleeping bag=5.121708393096924, velvet=5.053798198699951, abaya=4.718129634857178]
+	Closing the channel 
+
 This assumes that tensorflow inception is being served at `localhost:9000` and
- aslo the `example.jpg` file exists.
+ also the `example.jpg` file exists.
 
-
-To build this jar as an addon to tika, run
-
-```mvn clean compile assembly:single```
-
-and then use the jar `target/tensorflow-java-1.0-jar-with-dependencies.jar`
 
 ## Setup Tensorflow serving on localhost:9000
 
-Requires Docker
-
+Requires Docker up and running.
 
 ```
-# pull and start the prebuilt container, forward port 9000
+# pull and start the prebuilt grpc server container, forward port 9000
 docker run -it -p 9000:9000 tgowda/inception_serving_tika
 
 # Inside the container, start tensorflow service
 root@8311ea4e8074:/# /serving/server.sh
+
+# Inside the container, run tail -f to see logs:
+
+	root@c2643e66348e:/# tail -f /serving/inception_log 
+	I tensorflow_serving/sources/storage_path/file_system_storage_path_source.cc:147] File-system polling found servable version {name: default version: 157585} at path /serving/inception-export/00157585
+	I tensorflow_serving/sources/storage_path/file_system_storage_path_source.cc:147] File-system polling found servable version {name: default version: 157585} at path /serving/inception-export/00157585
+	...
 
 ```
 If you want to use a different port
@@ -64,7 +80,7 @@ Added a Dockerfile for grpc client, but i got trouble with it:
 		at edu.usc.irds.tensorflow.grpc.TensorflowObjectRecogniser.recognise(TensorflowObjectRecogniser.java:68)
 		at edu.usc.irds.tensorflow.grpc.Main.main(Main.java:51)
 	
-	
+
 
 
 
