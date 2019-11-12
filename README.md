@@ -37,3 +37,45 @@ If you want to use a different port
 
 May modify the `/serving/server.sh`, which has
 `/serving/bazel-bin/tensorflow_serving/example/inception_inference --port=9000 /serving/inception-export/  &> /serving/inception_log &`
+
+TODO
+
+Added a Dockerfile for grpc client, but i got trouble with it:
+
+	Last login: Tue Nov 12 12:13:07 on ttys004
+	aironman@MacBook-Pro-de-Alonso tensorflow-grpc-java % fish
+	Welcome to fish, the friendly interactive shell
+	aironman@MacBook-Pro-de-Alonso ~/g/tensorflow-grpc-java> docker images
+	REPOSITORY                           TAG                 IMAGE ID            CREATED              SIZE
+	aironman/tensorflow-grpc-java        1.0                 8388cf0ff520        About a minute ago   346MB
+	tgowda/inception_serving_tika        latest              f2ccd1767fe2        3 years ago          5.39GB
+	aironman@MacBook-Pro-de-Alonso ~/g/tensorflow-grpc-java> docker run 8388cf0ff520
+	Your container args are:
+	Creating channel host: 0.0.0.0 port= 9000
+	Channel initialized! io.grpc.internal.ManagedChannelImpl@3d8c7aca
+	TODO: test channel here with a sample image
+	Image = /opt/app/ferrari.jpg
+	Something went WRONG! UNAVAILABLE: Transport closed for unknown reason
+	io.grpc.StatusRuntimeException: UNAVAILABLE: Transport closed for unknown reason
+		at io.grpc.stub.ClientCalls.toStatusRuntimeException(ClientCalls.java:210)
+		at io.grpc.stub.ClientCalls.getUnchecked(ClientCalls.java:191)
+		at io.grpc.stub.ClientCalls.blockingUnaryCall(ClientCalls.java:124)
+		at edu.usc.irds.tensorflow.grpc.InceptionBlockingStub.classify(InceptionBlockingStub.java:64)
+		at edu.usc.irds.tensorflow.grpc.TensorflowObjectRecogniser.recognise(TensorflowObjectRecogniser.java:68)
+		at edu.usc.irds.tensorflow.grpc.Main.main(Main.java:51)
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
